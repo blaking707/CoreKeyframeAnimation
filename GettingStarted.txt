@@ -1,0 +1,58 @@
+1. DownloadBlender
+2. install Addon CoreBlend
+3. Export a Template you want to animate using core
+4. In blender, in the top left corner select File>Import>CoreTemplate
+5. Select The exported template to import into blender.
+6. If done there should be An Armature of the template in blender
+7. To make a new animation go to the animations tab
+8. in the bottom left corner select "Dope Sheet" And Change to "Action Editor"
+9. in the bottom middle aligned with "Action Editor" Click "New" and Click again to change action name and type in desired name
+10. To aniamte you select points with left click, Rotate with R , move around with G, and Scale with S
+11. To Add A key frame Press I and select LocRotScale to set all three values, Press a to select all "bones" (points) to add keyframes faster
+12. The timeline is the bar down the bottom, If you select the number in the timeline you will jump to that frame. You can change the starting and ending frame in the bottom right corner
+13. Repeat steps 11-12 until the action is done.
+14. You can add another action By the x button.
+15. to Export, in the top left corner select File>Export>CoreTemplate and select where you want to export the file top
+16. Import by making a new script and copy and pasting the export into the script
+17. Import Animation Base And Animation Files into core
+18. Add Animation Base to the hiracachy
+19. The default option for the animation is child based, so you will need to add the template you want animated as a child to a new folder
+20. in animation base Set the custom properties, ActionName to the action you want animated, Set KeyFrameFile To the New script of exported data, And Object to Animate to The new folder that contains the template.
+21. If there is any errors, the most common ones are, Action name is wrong, ObjectToAnimate is set to the wrong object.
+22. Its should be performing the action You created in blender!
+
+To Call The animation in script
+	"AnimationManager":Play(ActionName,KeyFrameFile, ObjectToAnimate)
+
+Optional params are
+	{
+	EasingType  = [linear ,
+inQuad, outQuad, inOutQuad, outInQuad , 
+inCubic,outCubic,inOutCubic ,outInCubic,
+inQuart ,outQuart,inOutQuart,outInQuart,
+inQuint ,outQuint,inOutQuint,outInQuint ,
+inSine,outSine,inOutSine,outInSine,
+inExpo,outExpo,inOutExpo ,outInExpo,
+inCirc,outCirc,inOutCirc,outInCirc,
+inElastic,outElastic,inOutElastic,outInElastic,
+inBack ,outBack,inOutBack ,
+outInBack,inBounce,outBounce ,inOutBounce ,outInBounce ]
+	
+	PlaybackType = [Loop, Once]
+	Select = [Muid, Child] (
+	PlaybackRate = int
+	FrameRate = int
+	} 
+
+
+Animation Script returns a table.
+
+table.MainTask is the Task that is created, Stop Aniamtion with task cancel 
+
+
+
+Editor notes:
+	The main focus of this is more of a base bone mesh.
+	#Requesting To be able to access the id of the objects{ from game so it can be moved from muid and Children 
+	#SetQuaternioun(Q) on Transform doesnt work
+
