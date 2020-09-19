@@ -245,7 +245,7 @@ def SetChildAsName(Data):
         for Child in Entry.Children:
             for O in Data:
                 if(O.Id == Child):
-                    O.Name = Entry.Name + O.Name
+                    O.Name = Entry.Name + "-" +O.Name
     return Data
 
 def findParent(List, id):
