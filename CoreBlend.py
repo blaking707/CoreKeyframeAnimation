@@ -3,7 +3,7 @@ bl_info = {
     "author" : "Blaking707",
     "description" : "",
     "blender" : (2, 80, 0),
-    "version" : (0, 0, 1),
+    "version" : (0, 0, 2),
     "location" : "",
     "warning" : "",
     "category" : "Generic"
@@ -16,7 +16,6 @@ from bpy_extras.io_utils import ExportHelper
 from bpy_extras.io_utils import ImportHelper
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 from bpy.types import Operator
-
 
 class ImportCore(Operator, ImportHelper):
     """This appears in the tooltip of the operator and in the generated docs"""
@@ -37,7 +36,6 @@ class ImportCore(Operator, ImportHelper):
         default=True,
     )
 
-
     def execute(self, context):
         Data = ImportptbAsDic(context, self.filepath)
         print("____")
@@ -46,7 +44,6 @@ class ImportCore(Operator, ImportHelper):
 #ADDS TO EXPORT BAR
 def menu_func_import(self, context):
     self.layout.operator(ImportCore.bl_idname, text="CoreTemplate")
-
 
 def ImportptbAsDic(context, filepath):
     
@@ -73,12 +70,14 @@ def ImportptbAsDic(context, filepath):
     """
     return AllObj
 
-
 def GetBracketGroup(Lines, text):
     PassText = Lines.copy()
     count = 0
     Objectstring = []
     for line in Lines:
+        line = line.replace("Pitch","X")
+        line = line.replace("Yaw","Y")
+        line = line.replace("Roll","Z")
         if (text in line):
             count = 1
             continue
@@ -260,8 +259,6 @@ def HasParent(Data, id):
             return True
     return False
 
-
-
 class ExportSomeData(Operator, ExportHelper):
     """Export Animations to Core"""
     bl_idname = "core.exportdata" 
@@ -350,8 +347,6 @@ def return_xyzw(value, datapath):
         return str(caserot.get(value))     
     else:
         return str(case.get(value))
-
-
 
 def register():
     bpy.utils.register_class(ExportSomeData)
