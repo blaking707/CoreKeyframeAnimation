@@ -3,7 +3,7 @@ bl_info = {
     "author" : "Blaking707",
     "description" : "",
     "blender" : (2, 80, 0),
-    "version" : (0, 0, 2),
+    "version" : (0, 0, 3),
     "location" : "",
     "warning" : "",
     "category" : "Generic"
@@ -207,13 +207,14 @@ def ExecuteImport(context, Data, Setting):
             Entry.parent = Parent
 
 
-
     #CHANGE TO POSE AND SET POSITIONS
     bpy.ops.object.mode_set(mode='POSE', toggle=False)
     for Entry in Bbones:
         Entry.location = SpawnedObjsDat[Entry.name][0]
+        Entry.rotation_mode = "XYZ"
         Entry.rotation_euler = SpawnedObjsDat[Entry.name][1]
-        Entry.scale = SpawnedObjsDat[Entry.name][2]
+        Entry.rotation_mode = "QUATERNION"
+        Entry.scale = SpawnedObjsDat[Entry.name][2] 
 
     #SAVE POSITIONS TO A POSE LIBARY AND MAKE SURE ITS A FAKE USER
     #could use position reset save, no scale (doing this but its dumb)
