@@ -11,7 +11,7 @@ bl_info = {
 import bpy
 import string
 import re
-
+import math
 from bpy_extras.io_utils import ExportHelper
 from bpy_extras.io_utils import ImportHelper
 from bpy.props import StringProperty, BoolProperty, EnumProperty
@@ -75,9 +75,9 @@ def GetBracketGroup(Lines, text):
     count = 0
     Objectstring = []
     for line in Lines:
-        line = line.replace("Pitch","X")
-        line = line.replace("Yaw","Y")
-        line = line.replace("Roll","Z")
+        line = line.replace("Pitch","Y")
+        line = line.replace("Yaw","Z")
+        line = line.replace("Roll","X")
         if (text in line):
             count = 1
             continue
@@ -196,7 +196,7 @@ def ExecuteImport(context, Data, Setting):
         b["ParentId"] =  Entry.ParentId
         b["MeshId"] =  Entry.MeshId
         b["Children"] =  Entry.Children
-        SpawnedObjsDat[b.name] = ((Entry.Location["X"]/100,Entry.Location["Y"]/100,Entry.Location["Z"]/100),(Entry.Rotation["X"],Entry.Rotation["Y"],Entry.Rotation["Z"]),(Entry.Scale["X"],Entry.Scale["Y"],Entry.Scale["Z"]))
+        SpawnedObjsDat[b.name] = ((Entry.Location["X"]/100,Entry.Location["Y"]/100,Entry.Location["Z"]/100),(math.radians(Entry.Rotation["X"]),math.radians(Entry.Rotation["Y"]),math.radians(Entry.Rotation["Z"])),(Entry.Scale["X"],Entry.Scale["Y"],Entry.Scale["Z"]))
         SpawnedObjs.append(b)
         
     #SET PARENT RELATION
@@ -213,7 +213,6 @@ def ExecuteImport(context, Data, Setting):
         Entry.location = SpawnedObjsDat[Entry.name][0]
         Entry.rotation_mode = "XYZ"
         Entry.rotation_euler = SpawnedObjsDat[Entry.name][1]
-        Entry.rotation_mode = "QUATERNION"
         Entry.scale = SpawnedObjsDat[Entry.name][2] 
 
     #SAVE POSITIONS TO A POSE LIBARY AND MAKE SURE ITS A FAKE USER
@@ -294,8 +293,11 @@ def write_some_data(context, filepath):
                 Channeltype = re.sub(".*\.", "" ,Channel.data_path)[0]
                 Document += ( "\t" * 5 + "{} {}\n" .format(Channeltype + return_xyzw(Channel.array_index, Channeltype) , "= {"))
                 for keyframe in Channel.keyframe_points:
-
-                    Document +=( "\t" *6 + "{" + "{},{}".format(keyframe.co.x,round(keyframe.co.y if ( Channeltype != "l" ) else keyframe.co.y * 100,7)) + "},\n" )
+                    value = keyframe.co.y 
+                    if Channeltype == "r":
+                         value = math.degrees(value)
+                        
+                    Document +=( "\t" *6 + "{" + "{},{}".format(keyframe.co.x,round(value if ( Channeltype != "l" ) else value * 100,7)) + "},\n" )
                 Document += ("\t"*5 +"},\n")
             Document += ("\t"*4 +"},\n")
             Document += ("\t"*3 +"},\n")
@@ -344,10 +346,11 @@ def return_xyzw(value, datapath):
         2:'y',
         3:'z',  
     }
-    if (datapath == "r"):
-        return str(caserot.get(value))     
-    else:
-        return str(case.get(value))
+    #if (datapath == "r"):
+    #    return str(caserot.get(value))     
+    #else:
+    #    return str(case.get(value))
+    return str(case.get(value))
 
 def register():
     bpy.utils.register_class(ExportSomeData)
